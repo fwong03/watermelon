@@ -1,5 +1,7 @@
 from flask import Flask, render_template, jsonify, session, request
 import requests
+import os
+import re
 
 app = Flask(__name__)
 app.secret_key = "ABC"
@@ -33,7 +35,22 @@ def greet():
 @app.route('/song.json')
 def getSong():
     player = session['user']
-    song = {'name': 'happy bday ' + player, 'author': 'Minnie Mouse'}
+    song_file = open("song.txt")
+    lyrics = []
+    song = {'Title': 'Hey There ' + player,
+            'Artist': 'Plain Robot T\'s',
+            'Lyrics': lyrics,
+            }
+
+    count = 0
+    for line in song_file:
+        count += 1
+        line = line.strip()
+        if line == "":
+            new_line = "*" * 20
+        else:
+            new_line = re.sub("Delilah", player, line)
+        lyrics.append(new_line)
 
     return jsonify(song)
 
@@ -41,4 +58,7 @@ def getSong():
 
 ####################################
 if __name__ == "__main__":
-    app.run(debug=True)
+    DEBUG = "NO_DEBUG" not in os.environ
+    PORT = int(os.environ.get("PORT", 5000))
+
+    app.run(host="0.0.0.0", port=PORT, debug=DEBUG)

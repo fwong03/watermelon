@@ -1,0 +1,15 @@
+{% extends 'product-detail-base.html' %}
+
+{% block content %}
+
+            <ul>
+                <li>Pad Type: {{ item.padtype.pad_type_name }}</li>
+                <li>Best Use: {{ item.bestuse.use_name }}</li>
+                <li>r-value: {{ '{:,.1f}'.format(item.r_value) }}</li>
+                <li>Length (inches): {{ item.length }} </li>
+                {% if item.width %} <li>Width (inches): {{ item.width }}</li>{% endif %}
+                <li>Weight (ounces): {{ item.weight }} </li>
+            </ul>
+
+
+{% endblock %}

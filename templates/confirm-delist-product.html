@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirm Delist Product{% endblock %}
+
+{% block content %}
+<p>Are you sure you want to delist {{ product.brand.brand_name }} {{ product.model }}? </p>
+
+
+    <form action="/handle-delist-product" method="POST">
+        <input type="hidden" name="prod_id" value="{{ product.prod_id }}">
+        <input type="submit" value="Yes, delist this product">
+    </form>
+        <p>No, go back to <a href="/account-info">My Account</a></p>
+
+{% endblock %}

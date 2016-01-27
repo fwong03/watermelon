@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rate User</title>
+
+   <link href="/static/bootstrap-3.3.6-dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="/static/project.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Submit a User Rating</h4>
+      </div>       
+    <div class="modal-body">
+        <h3>Rating for User: {{ user.email }}</h3>
+        <form action="{{ submit_route }}" id="user_rating_form" method="POST">
+          <h3>Star rating</h3>
+            <p>How many stars would you rate your experience with this user?</p>
+            <br>
+            <select id="number_stars" name="num_stars">
+              {% for star_value in star_values %}
+                <option value="{{ star_value }}">{{ star_ratings[star_value] }}</option>
+              {% endfor %}
+            </select>
+
+          <h3>Comments</h3>
+            <p>Please provide your reasoning for your star feedback.</p>
+            <textarea rows="4" cols="50" maxlength="128" id="comments_text" name="comments"></textarea>
+            <br><br>
+            <input type="hidden" id="owner_bool" name="is_owner" value="{{ is_owner }}">
+            <input type="hidden" id="hist_num" name="hist_id" value="{{ hist_num  }}">
+            <input type="hidden" id="user_num" name="user_id" value="{{ user.user_id }}">
+            <br><br>
+
+            <input type="submit" value="Submit Rating">
+            <br><br>
+        </div>
+        
+
+    <script>
+        function submitUserRating(evt){
+            console.log("starting submitUserRating");
+            evt.preventDefault();
+
+            var history_id = $("#hist_num").val();
+            var user_id = $("#user_num").val();
+
+            $.ajax({
+                url: '/handle-user-rating',
+                data: $('#user_rating_form').serialize(),
+                type: 'POST',
+                success: function(response) {
+                    console.log(response);
+                    $("#rating-modal").modal("hide");
+                    $("#" + user_id + history_id + "-rate-user-link").empty();
+                    $("#" + user_id + history_id + "-rate-user-link").html("<b>Rating submitted!</b>");
+                },
+                error: function(response) {
+                    consolde.log(response);
+                }
+
+                })
+                
+        }
+
+        $("#user_rating_form").submit(submitUserRating);
+        $("#rating-modal").on("hidden.bs.modal", function() { $(this).removeData() });
+    </script>
+
+
+</body>
+</html>

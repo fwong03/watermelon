@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% block title %}TITLE GOES HERE{% endblock %}</title>
+
+    <link href="/static/bootstrap-3.3.6-dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="/static/project.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+          <div class="navbar-header">
+              <h1><a class="navbar-brand" href="/success"><b>happy camper</b></a></h1>
+          </div>
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav navbar-right">
+                  <li><a href="/account-info"><b>Your Account</b></a></li>
+                  <li><a href="/logout"><b>Log Out</b></a></li>
+              </ul>
+          </div>
+      </div>
+    </nav>
+
+  <hr>
+    <ul>
+      {% for message in get_flashed_messages() %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+
+      <form action="/handle-edit-listing/{{ parent.prod_id }}" method="POST">
+
+    <h3>Product Info</h3>
+      Brand: 
+        <select name="brand_id">
+          {% for brand in brands %}
+            {% if parent.brand_id == brand.brand_id %}
+              <option value="{{ brand.brand_id }}" selected>{{ brand.brand_name }}</option>
+            {% else %}
+              <option value="{{ brand.brand_id }}">{{ brand.brand_name }}</option>
+            {% endif %}
+          {% endfor %}
+          <option value="-1">Add new brand</option>
+        </select><br> <br>
+
+      Add new brand: (Show this only if adding new brand) 
+        <input type="text" size="50" name="new_brand_name"><br><br>
+
+      Model Name: <input type="text" size="50" name="modelname" value = "{{ parent.model }}" ><br><br>
+      Description: <textarea rows="4" cols="50" name="desc" maxlength="128">{{ parent.description }}</textarea><br><br>
+      Condition: <textarea rows="4" cols="50" name="cond" maxlength="128">{{ parent.condition }}</textarea><br><br>
+
+    <h3>Product Availability and Pricing</h3>
+      Available Start Date: <input type="text" size="10" value={{ parent.avail_start_date.date().isoformat() }} name="avail_start">
+        <br><br>
+      Available End Date: <input type="text" size="10" value={{ parent.avail_end_date.date().isoformat() }} name="avail_end">
+        <br><br>
+      <br>
+      Price per Day: $ <input type="text" size="4" maxlength="4" name="pricing" value = "{{  '{:,.2f}'.format(parent.price_per_day) }}">
+      <br><br>
+      Image URL: <input type="text" size="50" name="image" value = {{ parent.image_url }}><br><br>
+
+
+
+  {% block content %}PUT CATEGORY SPECIFIC STUFF HERE{% endblock %}
+
+    <input type="submit">
+
+</form>
+
+    <br>
+    <br>
+  <div class="container-fluid">
+    <footer>2015 | Frances Wong | <a href="mailto:fswong@gmail.com">Say hello</a></footer>
+  <div>
+
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+   <script src="/static/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>

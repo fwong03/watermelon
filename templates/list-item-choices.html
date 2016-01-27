@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}List An Item{% endblock %}
+
+{% block content %}
+
+    <h2>What kind of item would you like to list?</h2>
+
+    {% for category in categories %}
+        <p><a href="/list-product/{{ category.cat_id }}">{{ category.cat_name }}</a></p>
+    {% endfor %}
+
+{% endblock %}

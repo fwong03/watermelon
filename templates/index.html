@@ -1,15 +1,14 @@
-<html>
-<body>
-    <h1>Hi!</h1>
-    <form action="/greet">
-        What's your name?
-        <input type="text" name="person">
-        <br>
-        What do you like your songs to be about?
-        <input type="text" name="subject">
-        <br>
-        <input type="submit">
-    </form>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}Homepage{% endblock %}
+
+{% block content %}
+
+    <h1>Hi! Welcome to my projects page.</h1>
+    <ul>
+        <li><a href="/happy-camper">Happy Camper: my Hackbright Project</a></li>
+        <li><a href="itunes-search">iTunes Search: API endpoint practice</a></li>
+    </ul>
+
+
+{% endblock %}

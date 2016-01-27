@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirm Account Deactivation{% endblock %}
+
+{% block content %}
+<p>Are you sure you want to deactivate your account?</p>
+
+    <form action="/handle-deactivate-account" method="POST">
+        <input type="submit" value="Yes, deactivate my account">
+    </form>
+
+{% endblock %}

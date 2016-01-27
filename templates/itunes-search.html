@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}i-tunes search{% endblock %}
+
+{% block content %}
+
+    <h1>Do a useless i-tunes search!</h1>
+    <form action="/greet">
+        What's your name?
+        <input type="text" name="name">
+        <br>
+        What do you like your songs to be about?
+        <input type="text" name="subject">
+        <br>
+        <input type="submit">
+    </form>
+
+{% endblock %}

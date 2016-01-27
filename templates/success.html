@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Signed In Homepage{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row row-centered">
+      <div class="col-xs-2 col-centered"></div>
+      <div class="col-xs-7 col-centered"><div class="landing-page-choice"><b>List Stuff</b></div></div>
+      <div class="col-xs-3 col-centered"></div>
+    </div>
+    <br>
+    
+    <div class="row row-centered">
+      <div class="col-xs-1"></div>
+        <div class="col-xs-3 col-centered">
+          <a class="thumbnail" href="/list-product/1">
+          <img class="img-responsive" src="/static/img/cat1.jpg" alt="List a tent" style="height:156px">
+          </a>
+          <p>List a Tent</p>
+        </div>
+           <div class="col-xs-3 col-centered">
+            <a class="thumbnail" href="/list-product/2">
+          <img class="img-responsive" src="/static/img/cat2.jpg" alt="List a sleeping bag" style="height:156px">
+          </a>
+          <p>List a Sleeping Bag</p>
+        </div>
+          <div class="col-xs-3 col-centered">
+            <a class="thumbnail" href="/list-product/3">
+          <img class="img-responsive" src="/static/img/cat3.jpg" alt="List a sleeping pad" style="height:156px">
+          </a>
+          <p>List a Sleeping Pad</p>
+        </div>
+
+    </div>
+    <br>
+
+     <div class="row row-centered">
+      <div class="col-xs-2 col-centered"></div>
+        <div class="col-xs-7 col-centered"><div class="landing-page-choice"><i>-- or --</i></div></div>
+        <div class="col-xs-3 col-centered"></div>
+    </div>
+    <br>
+
+    
+    <div class="row row-centered">
+      <div class="col-xs-2 col-centered"></div>
+      <div class="col-xs-7 col-centered"><div class="landing-page-choice"><b>Find Stuff</b></div></div>
+      <div class="col-xs-3 col-centered"></div>
+    </div>
+    <br>
+    <br>
+    <div class="row row-centered">
+      <div class="col-xs-2 col-centered"></div>
+      <div class="col-xs-7 col-centered">
+        <form action="/search-results" id="search-form">
+          <table class="table search-form-table">
+            <tr>
+            <td>Search center (city and state or zipcode):</td>
+            <td><input type="text" size="15" value="{{ user.postalcode }}" name="search_area"></td>
+            </tr>
+            <tr>
+            <td>Distance (miles):</td>
+            <td><input type="text" size="4" value="20" name="search_miles"></td>
+            </tr>
+            <tr>
+            <td>Start Date (yyyy-mm-dd):</td>
+            <td><input type="text" size="10" value ={{ today }} name="search_start_date"></td>
+            </tr>
+            <tr>
+            <td>End Date (yyyy-mm-dd):</td>
+            <td><input type="text" size="10" value ={{ future }} name="search_end_date"></td>
+           </tr>
+            <tr>
+            <td>Optional: Filter by category:</td>
+            <td><select name="category_id">     
+                <option value="-1">Any</option>
+                {% for category in product_categories %}
+                <option value="{{ category.cat_id }}">{{ category.cat_name }}</option>
+                {% endfor %}
+                </select>
+            </td>
+            </tr>
+            <tr>
+            <td>Optional: Filter by brand:</td>
+            <td><select name="brand_id">
+                <option value="-1">Any</option>
+                {% for brand in product_brands %}
+                <option value="{{ brand.brand_id }}">{{ brand.brand_name }}</option>
+                {% endfor %}
+                </select>
+            </td>
+            </tr>
+          </table>
+                <input type="submit" value="Search for Gear"></a></div>
+        <div class="col-xs-3 col-centered"></div>
+    </div>
+</div>
+
+    
+
+{% endblock %}

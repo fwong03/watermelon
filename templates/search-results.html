@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row row-centered">
+            <div class="col-xs-2 col-centered"></div>
+            <div class="col-xs-8 col-centered"><div class="landing-page-choice">Search Results</div></div>
+            <div class="col-xs-2 col-centered"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-centered">
+              Current Search: Location: {{ location }} || Search radius: {{ miles }} miles || Dates: {{ session['search_start_date'].date().isoformat() }} to {{ session['search_end_date'].date().isoformat() }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+            <form action="/search-results">
+                <br>Modify Search:
+                <ul>
+                <li>Search center: <input type="text" size="20" value={{ session['search_area'] }} name="search_area"> Search radius (miles): <input type="text" size="4" value="{{ session['search_radius'] }}" name="search_miles"></li>
+                <li>Start Date: <input type="text" size="10" value ={{ session['search_start_date'].date().isoformat() }} name="search_start_date">
+                    End Date: <input type="text" size="10" value ={{ session['search_end_date'].date().isoformat()  }} name="search_end_date">
+                </li>
+                <li>Category: 
+                    <select name="category_id">     
+                        <option value="-1">Any</option>
+                        {% for category in product_categories %}
+                        <option value="{{ category.cat_id }}">{{ category.cat_name }}</option>
+                        {% endfor %}
+                    </select>
+                Brand: 
+                <select name="brand_id">
+                    <option value="-1">Any</option>
+                    {% for brand in product_brands %}
+                    <option value="{{ brand.brand_id }}">{{ brand.brand_name }}</option>
+                    {% endfor %}
+                </select></li>
+                </ul>
+            </div>
+        </div>
+     <div class="row">
+        <div class="col-xs-2"></div>
+        <div class="col-xs-10">
+            <input type="submit" value="Search Again">
+        </div>
+    </div>
+
+    
+        {% for category in search_categories %}
+            <div class="row">
+            <div class="column-fluid"><br><h3>{{ category }}</h3></div>
+            {% if not products[category] %}
+                <div class="col-xs-12"><p>Sorry, there are currently no available {{ category }} fitting your search criteria.</p></div>
+            {% else %}
+                {% for product in products[category] %}
+                    <div class="col-lg-3 col-md-4 col-xs-6 thumb">
+                    <a class="thumbnail" href="/product-detail/{{ product.prod_id }}">
+                    <img class="img-responsive" src="{{ product.image_url }}" alt="{{ product.brand.brand_name }} {{ product.model }}" style="height:128px">
+                    </a>
+                    <ul>
+                        <li>Brand: {{ product.brand.brand_name }}</li>
+                        <li>Model: {{ product.model }}</li>
+                        <li>Price Per Day: ${{ '{:,.2f}'.format(product.price_per_day) }}</li>
+                        <li>Cost for {{ session['num_days'] }} days: ${{ '{:,.2f}'.format(session['num_days'] * product.price_per_day) }}</li>
+                        <li>Product location: {{ product.owner.city }}</li>
+                    </ul>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            </div>
+        {% endfor %}
+
+{% endblock %}

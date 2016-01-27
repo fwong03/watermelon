@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Create a New Account{% endblock %}
+
+{% block content %}
+    <h2>Create a New Account</h2>
+
+  <form action="/handle-create-account" method="POST">
+
+    <h3>Name</h3>
+      First Name: <input type="text" name="firstname"><br>
+      <br>
+      Last Name: <input type="text" name="lastname"><br>
+    <br>
+
+    <h3>Contact Info</h3>
+      Street Address: <input type="text" name="staddress"><br>
+      <br>
+      City: <input type="text" name="cty"><br>
+      <br>
+      State: <input type="text" name="state" placeholder=" two-letter abbreviation"><br>
+      <br>
+      Zip Code: <input type="text" name="zipcode" placeholder="5 digits only"><br>
+      <br>
+      Phone Number: <input type="text" name="phonenumber" placeholder = "no dashes, no country code"><br>
+      <br>
+
+    <h3>Login Info</h3>
+      Email: <input type="text" name="username"><br>
+      <br>
+      Password: <input type="password" name="pword"><br>
+      <br>
+      Confirm Password: <input type="password" name="confirm_pword"><br>
+      <br>
+
+    <p>Optional: Profile pic url <input type="text" name="profile_url"></p>
+
+    <br>
+  <input type="submit">
+
+</form>
+
+  
+{% endblock %}

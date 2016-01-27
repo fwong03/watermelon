@@ -1,3 +1,4 @@
+# At adventure-girl.com
 from flask import Flask, render_template, jsonify, session, request
 import requests
 import os
@@ -11,13 +12,22 @@ app.secret_key = "ABC"
 
 @app.route('/')
 def index():
-
     return render_template('index.html')
+
+
+@app.route('/happy-camper')
+def happycamper():
+    return render_template('signedout.html')
+
+
+@app.route('/itunes-search')
+def itunes():
+    return render_template('itunes-search.html')
 
 
 @app.route('/greet', methods=['GET'])
 def greet():
-    user = request.args.get("person")
+    user = request.args.get("name")
     topic = request.args.get("subject")
     session['user'] = user
 
@@ -32,9 +42,9 @@ def greet():
                            songs=jlist, total_num=num_songs)
 
 
-@app.route('/song.json')
+@app.route('/song.json', methods=['GET'])
 def getSong():
-    player = session['user']
+    player = request.args.get("name")
     song_file = open("song.txt")
     lyrics = []
     song = {'Title': 'Hey There ' + player,
@@ -49,7 +59,8 @@ def getSong():
         if line == "":
             new_line = "*" * 20
         else:
-            new_line = re.sub("Delilah", player, line)
+            temp_line = re.sub("Delilah", player, line)
+            new_line = re.sub("girl", player, temp_line)
         lyrics.append(new_line)
 
     return jsonify(song)

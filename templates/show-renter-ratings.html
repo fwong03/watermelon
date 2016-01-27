@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Renter Ratings{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            <h3>Ratings for Renter: {{ user.email }}</h3>
+            <br>
+            <img class="thumbnail" src="{{ "../" + user.profile_pic_url }}" alt="profile pic" style="height:128px">
+            <h4>Average Star Rating:
+                {% if average > 0 %}
+                    {{ '{:,.1f}'.format(average) }} Stars
+                {% else %}
+                    This user has no renter star ratings yet.
+                {% endif %}
+            </h4>
+            <br>
+            <h4>Comments</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-md-6 col-lg-6">
+        {% if ratings %}
+           <table class="table account-info-table">
+            <tr>
+                <th>Stars (out of 4)</th>
+                <th>Comments</th>
+                <th>Product</th>
+            </tr>
+        {% for rating in ratings %}
+        <tr>
+            <td>{{ rating.stars }}</td>
+            <td>{{ rating.comments }}</td>
+            <td><a href="/product-detail/{{ rating.rhistory[0].product.prod_id }}">{{ rating.rhistory[0].product.brand.brand_name }}: {{ rating.rhistory[0].product.model }}</td>
+        {% endfor %}
+    </table>
+    {% else %}
+        <ul>
+            <li>This user has no renter comments yet.</li>
+        </ul>
+    {% endif %}
+            </div>
+    </div>
+</div>
+
+
+{% endblock %}

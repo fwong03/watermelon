@@ -1,0 +1,39 @@
+{% extends 'edit-base.html' %}
+
+{% block title %}Edit A Sleeping Bag{% endblock %}
+
+{% block content %}
+
+<h3>Sleeping Bag Specs</h3>
+
+    Fill Type: 
+        <select name="filltype">
+            {% for fill_type in fill_types %}
+                {% if child.fill_code == fill_type.fill_code %}
+                    <option value="{{ fill_type.fill_code }}" selected>{{ fill_type.fill_name }}</option>
+                {% else %}
+                    <option value="{{ fill_type.fill_code }}">{{ fill_type.fill_name }}</option>
+                {% endif %}
+            {% endfor %}
+        </select><br>
+          <br>
+
+    Temp Rating (fahrenheit): <input type="text" size="2" maxlength="2" value = "{{ child.temp_rating }}" name="temp"><br>
+    <br>
+
+    Weight (ounces): <input type="text" size="6" maxlength="3" placeholder = "16 oz = 1 lb" {% if child.weight %} value = "{{ child.weight }}" {% endif %} name="bag_weight"><br>
+    <br>
+    
+    Length (inches): <input type="text" size="4" maxlength="3"
+                                {% if child.length %} value = "{{ child.length }}"{% endif %}  name="length"><br>
+    <br>
+    Gender (optional): 
+    <select name="gender">
+        <option value="Z">Select One</option>
+        {% for gender in genders %}
+            <option value="{{ gender.gender_code }}">{{ gender.gender_name }}</option>
+        {% endfor %}
+    </select><br>
+        <br>
+
+{% endblock %} 

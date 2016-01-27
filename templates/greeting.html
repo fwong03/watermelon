@@ -1,7 +1,13 @@
-<html>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Get a personalized song{% endblock %}
+
+{% block content %}
     <h1>Hi {{ player }}! </h1>
-    <p>Get a <a href="/song.json">personalized song</a>.</p>
+    <form action="/song.json">
+        <input type="hidden" name="name" value={{session['user']}}>
+        <input type="submit" value="Get a personalized song">
+    </form>
 
     <h1>Here are {{ total_num }} songs about {{ subj }}</h1>
 
@@ -13,6 +19,4 @@
     </ul>
 
 
-
-</body>
-</html>
+{% endblock %}

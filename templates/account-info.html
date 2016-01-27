@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+
+  {% block title %}Account Info{% endblock %}
+
+  {% block content %}
+
+  <div class="container">
+   <div class="row row-centered">
+        <div class="col-xs-12 col-centered">
+            <h3>Your Contact Info</h3><br>
+        </div>
+        <div class="col-xs-1"></div>
+        <div class="col-xs-6">
+            <h4>The Info We Have On File</h4>
+            <ul>
+                <li><b>Name: </b>{{ user.fname }} {{ user.lname }}</li>
+                <li><b>Address: </b> {{ user.street }}, {{ user.city }}, {{ state }} {{ user.postalcode }}</li>
+                <li><b>Phone: </b> {{ phonenum }}</li>
+                <li><b>email: </b> {{ user.email }}</li>
+                <li><b>Actions available:</b> <a href="/confirm-deactivate-account">Deactivate your account</a></li>
+        </div>
+        <div class="col-xs-1"></div>
+        <div class="col-xs-4 col-centered">
+             <img class="thumbnail" src={{ user.profile_pic_url }} alt="profile pic" style="height:128px">
+
+        </div>
+    </div>
+
+    <br>
+    <br>
+
+    <div class="row row-centered">
+        <div class="col-xs-12 col-centered">
+            <h3>Manage Your Inventory</h3>
+        </div>
+        <div class="col-xs-12">
+            <h4>Stuff you have available for rent (these will show up in search results)</h4>
+                {% if not products_available %}
+                    <i>None</i>
+                    <br>
+                    <br>
+                {% else %}
+        <table class="table table-condensed account-info-table">
+            <tr>
+                <th>Category</th>
+                <th>Brand and Model</th>
+                <th>Available Start</th>
+                <th>Available End</th>
+                <th>Price Per Day</th>
+                <th>Actions Available</th>
+            </tr>
+            {% for product in products_available %}
+                <tr>
+                    <td>{{ product.category.cat_name }}</td>
+                    <td><a href="/product-detail/{{ product.prod_id }}">{{ product.brand.brand_name }} {{ product.model }}</a></td>
+                    <td>{{ product.avail_start_date.date().isoformat() }}</td>
+                    <td>{{ product.avail_end_date.date().isoformat() }}</td>
+                    <td>${{ '{:,.2f}'.format(product.price_per_day) }}</td>
+                    <td><ul>
+                            <li><a href="confirm-delist-product/{{ product.prod_id }}">Delist product</a></li>
+                            <li><a href="edit-listing/{{ product.prod_id }}">Edit listing</a>
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+    <br>
+
+    <h4>Stuff no longer available for rent (delisted or recently rented)</h4>
+    {% if not products_not_available %}
+        <i>None</i>
+        <br>
+        <br>
+    {% else %}
+        <table class="table table-condensed account-info-table">
+            <tr>
+                <th>Category</th>
+                <th>Brand and Model</th>
+                <th>Price Per Day</th>
+                <th>Actions Available</th>
+            </tr>
+            {% for product in products_not_available %}
+                <tr>
+                    <td>{{ product.category.cat_name }}</td>
+                    <td><a href="/product-detail/{{ product.prod_id }}">{{ product.brand.brand_name }} {{ product.model }}</a></td>
+                    <td>${{ '{:,.2f}'.format(product.price_per_day) }}</td>
+                    <td>
+                        <a href="edit-listing/{{ product.prod_id }}">Relist/Edit listing</a>                      
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+    <br>
+    <h4> Stuff You've Rented Out (rate renters and get their contact info here)</h4>
+    {% if not desc_order_hist %}
+        <i>You do not yet have a history of renting out products.</i>
+        <br>
+        <br>
+    {% else %}
+        <table class="table table-condensed account-info-table">
+            <tr>
+                <th>Rental Submission Date</th>
+                <th>Brand and Model</th>
+                <th>Category</th>
+                <th>Rental Start Date</th>
+                <th>Rental End Date</th>
+                <th>Total Cost</th>
+                <th>email Renter</th>
+                <th>See Ratings of Renter</th>
+                <th>Rate Renter</th>
+            </tr>
+                {% for history in desc_order_hist %}
+                <tr>
+                    <td>{% if history.rental_submission_date > monthago %} <b>{{ history.rental_submission_date.date().isoformat() }}</b>
+                        {% else %} {{ history.rental_submission_date.date().isoformat() }} {% endif %}
+                    <td><a href="/product-detail/{{ history.product.prod_id }}">{{ history.product.brand.brand_name }} {{ history.product.model }}</a></td>
+                    <td>{{ history.product.category.cat_name }}</td>
+                    <td>{% if (history.start_date < monthfromnow) and (history.start_date > today) %} <b>{{ history.start_date.date().isoformat() }}</b>
+                        {% else %} {{ history.start_date.date().isoformat() }} {% endif %} </td>
+                    <td>{{ history.end_date.date().isoformat() }}</td>
+                    <td>${{ '{:,.2f}'.format(history.total_cost) }}</td>
+                    <td><a href="mailto:{{ history.renter.email }}">{{ history.renter.email }}</a></td>
+                    <td> <a href="/show-renter-ratings/{{ history.renter_user_id }}">Ratings of {{ history.renter.fname }} </a></td>
+                    <td> {% if history.renter_rating_id %}
+                            <p><i>Renter rating already submitted.</i></p>
+                        {% else %}
+                            <div class="rate-button" id="{{ history.renter_user_id }}{{ history.history_id }}-rate-user-link">
+                                <button type="button" class="btn btn-primary btn-small" data-toggle="modal" data-target="#rating-modal"href="/rate-user-modal/{{ history.renter_user_id }}-{{ history.history_id }}-0">Rate Renter</button>
+                            </div>
+                        {% endif %}
+                    </td>
+                {% endfor %}
+        </table>
+    {% endif %}
+    <br>
+    </div>
+</div>
+    <div class="row row-centered">
+        <div class="col-xs-12 col-centered">
+            <h3>Your History as a Renter</h3>
+        </div>
+        <div class="col-xs-12">
+        <h4>Stuff you've rented</h4>
+
+    {% if not histories %}
+        <i>You have no history of renting products.</i>
+    {% else %}
+        <table class="table table-condensed account-info-table">
+            <tr>
+                <th>Rental Submission Date</th>
+                <th>Rental Start Date</th>
+                <th>Rental End Date</th>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Total Cost</th>
+                <th>Owner and Product Ratings</th>
+                <th>Status</th>
+                <th>email Owner</th>
+                <th>Actions Available</th>
+            </tr>
+            {% for history in histories %}
+                <tr>
+                    <td>{{ history.rental_submission_date.date().isoformat() }}</td>
+                    <td>{% if (history.start_date < monthfromnow) and (history.start_date > today) %} <b>{{ history.start_date.date().isoformat() }}</b>
+                        {% else %} {{ history.start_date.date().isoformat() }} {% endif %} </td>
+                    <td>{{ history.end_date.date().isoformat() }}</td>
+                    <td><a href="/product-detail/{{ history.product.prod_id }}">{{ history.product.brand.brand_name }} {{ history.product.model }}</a></td>
+                    <td>{{ history.product.category.cat_name }}
+                    <td>${{ '{:,.2f}'.format(history.total_cost) }}</td>
+                    <td><ul>
+                            <li><a href="/show-owner-ratings/{{ history.product.owner.user_id }}">Owner Ratings</a>
+                             <li><a href="/show-product-ratings/{{ history.product.prod_id }}">Product Ratings</a>
+                        </ul>
+                    <td>{% if (today > history.end_date) %}
+                            Rental done
+                        {% elif (today < history.start_date) %}
+                            {{ (history.start_date - today).days }} days until rental
+                        {% else %}
+                            Rental ongoing
+                        {% endif %}
+                    </td>
+                    <td><a href="mailto:{{ history.product.owner.email }}">{{ history.product.owner.email }}</a></td>
+                    <td> 
+                        <ul>
+                            <li> 
+                                {% if history.owner_rating_id %}
+                                    <i>Owner rating already submitted.</i>
+                                {% else %}
+                                <div id="{{ history.product.owner_user_id }}{{ history.history_id }}-rate-user-link">
+                                    <button type="button" class="btn btn-primary btn-small" data-toggle="modal" data-target="#rating-modal" href="/rate-user-modal/{{ history.product.owner_user_id }}-{{ history.history_id }}-1">Rate Owner</button>
+                                </div>        
+                                {% endif %}
+                            </li>
+                            <li>
+                                {% if history.prod_rating_id %}
+                                    <i>Product rating already submitted.</i>
+                                {% else %}
+                                    <div id="{{ history.prod_id }}{{ history.history_id }}-rate-product-link">
+                                        <button type="button" class="btn btn-primary btn-small" data-toggle="modal" data-target="#rating-modal" href="/rate-product-modal/{{ history.prod_id }}-{{ history.history_id }}">Rate Product</button>
+                                    </div>
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <br><br>
+    {% endif %}
+    <br>
+</div>
+</div>
+
+    <div class="modal fade" id="rating-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header"> 
+        </div>
+        <div class="modal-body"> 
+        </div>
+        <div class="modal-footer">
+        </div>
+    </div>
+    </div>
+    </div>
+
+</div>
+
+{% endblock %}

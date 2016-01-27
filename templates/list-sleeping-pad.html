@@ -1,0 +1,38 @@
+{% extends 'list-base.html' %}
+
+{% block title %}List A Sleeping Pad{% endblock %}
+
+{% block content %}
+
+<h3>Sleeping Pad Specs</h3>
+
+    Pad Type: 
+    <select name="padtype">
+        {% for pad_type in pad_types %}
+            <option value="{{ pad_type.pad_type_code }}">{{ pad_type.pad_type_name }}</option>
+        {% endfor %}
+    </select><br>
+      <br>
+
+      Best Use: 
+    <select name="bestuse">
+        {% for best_use in best_uses %}
+            <option value="{{ best_use.use_id }}">{{ best_use.use_name }}</option>
+        {% endfor %}
+    </select><br>
+    <br>
+
+    r-value: <input type="text" size="4" maxlength="4" name="r_val"><br>
+    <br>
+
+    Weight (ounces): <input type="text" size="6" maxlength="3" placeholder = "16 oz = 1 lb" name="pad_weight"><br>
+    <br>
+    
+    Length (inches): <input type="text" size="4" maxlength="3" name="pad_length"><br>
+    <br>
+
+    Width (inches): <input type="text" size="4" maxlength="3"
+                                placeholder="optional" name="pad_width"><br>
+    <br>
+
+{% endblock %} 

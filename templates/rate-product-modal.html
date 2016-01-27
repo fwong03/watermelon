@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Rate Product</title>
+
+    <link href="/static/bootstrap-3.3.6-dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="/static/project.css" rel="stylesheet">
+  </head>
+
+
+  <body>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Submit a Product Rating</h4>
+      </div>       
+    <div class="modal-body">
+        <h3>Rating for Item: {{ product.brand.brand_name }} {{ product.model }}</h3>
+        <form action="{{ submit_route }}" id="product_rating_form" method="POST">
+          <h3>Star rating</h3>
+            <p>How many stars would you rate this product?</p>
+            <br>
+            <select id="number_stars" name="num_stars">
+              {% for star_value in star_values %}
+                <option value="{{ star_value }}">{{ star_ratings[star_value] }}</option>
+              {% endfor %}
+            </select>
+
+          <h3>Comments</h3>
+            <p>Please provide your reasoning for your star feedback.</p>
+            <textarea rows="4" cols="50" maxlength="128" id="comments_text" name="comments"></textarea>
+            <br><br>
+            <input type="hidden" id="hist_num" name="hist_id" value="{{ hist_num  }}">
+            <input type="hidden" id="prod_num" name="prod_id" value="{{ product.prod_id }}">
+            <br><br>
+
+            <input type="submit" value="Submit Rating">
+            <br><br>
+        </div>
+
+<script>
+    function submitProductRating(evt){
+        console.log("starting submitProductRating");
+        evt.preventDefault();
+
+        var history_id = $("#hist_num").val();
+        var prod_id = $("#prod_num").val();
+
+        $.ajax({
+            url: '/handle-product-rating',
+            data: $('#product_rating_form').serialize(),
+            type: 'POST',
+            success: function(response) {
+                console.log(response);
+            }
+            })
+
+            $("#rating-modal").modal("hide");
+            $("#" + prod_id + history_id + "-rate-product-link").empty();
+            $("#" + prod_id + history_id + "-rate-product-link").html("<b>Rating submitted!</b>");
+    }
+
+    $("#product_rating_form").submit(submitProductRating);
+    $("#rating-modal").on("hidden.bs.modal", function() { $(this).removeData() });
+</script>
+
+
+</body>
+</html>

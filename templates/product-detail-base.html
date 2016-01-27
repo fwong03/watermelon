@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Detail: {{ product.brand.brand_name }} {{ product.model }}</title>
+
+    <link href="/static/bootstrap-3.3.6-dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="/static/project.css" rel="stylesheet">
+  </head>
+
+
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <h1><a class="navbar-brand" href="/success"><b>happy camper</b></a></h1>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/account-info"><b>Your Account</b></a></li>
+                    <li><a href="/logout"><b>Log Out</b></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+  <hr>
+    <ul>
+      {% for message in get_flashed_messages() %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12">
+                <h2>Product Detail: {{ product.brand.brand_name }} {{ product.model }}</h2>
+                <ul>
+                    <li>Category: {{ product.category.cat_name }}</li>
+                    <li> Status: {% if product.available %} Available {% else %} Unavailable {% endif %}</li>
+            </div>
+        </div>
+    <br> 
+    <br>
+
+    <div class="row row-centered">
+        <div class="col-xs-12 col-centered">
+            <img src="{{ "../" + product.image_url }}" alt="{{ product.brand.brand_name }} {{ product.model }}">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-md-4 col-lg-4">
+            <h4>General Product Info:</h4>
+            <ul>
+                <li>Product location: {{ product.owner.city }}, {{ product.owner.region.full }}</li>
+                <li>Available start date: {{ product.avail_start_date.date().isoformat() }}</li>
+                <li>Available end date: {{ product.avail_end_date.date().isoformat() }}</li>
+                <li>Price per day: ${{ '{:,.2f}'.format(product.price_per_day) }}</li>
+                <li>Description: {{ product.description }}</li>
+                <li>Condition: {{ product.condition }}</li>
+                <li><a href="/show-owner-ratings/{{ product.owner.user_id }}">See Product Owner Ratings</a></li>
+                <li><a href="/show-product-ratings/{{ product.prod_id }}">See Product Ratings</a></li>
+            </ul>
+        </div>
+        <div class="col-xs-12 col-md-4 col-lg-4">
+            <h4>Specs:</h4>
+                {% block content %}
+                    CATEOGRY SPECIFIC STUFF HERE
+                {% endblock %}
+        </div>
+        <div class="col-xs-12 col-md-4 col-lg-4">  
+            {% if product.owner.email == session['user'] %}
+                <p>Hello, product owner! This item is currently {% if product.available %} available {% else %}not available{% endif %} for rent.</p>
+            {% elif have_searched %}
+                {% if not product.available %}
+                    <p>This item is not currently available for rent.</p>
+                {% else %}
+                    <h4>Your rental period info:</h4>
+                    <ul>
+                        <li>Rental start date: {{ session['search_start_date'].date().isoformat() }}</li>
+                        <li>Rental end date: {{ session['search_end_date'].date().isoformat() }}</li>
+                        <li>Number of days: {{ session['num_days'] }}</li>
+                        <li>Total cost: ${{ '{:,.2f}'.format(session['num_days'] * product.price_per_day) }}</li>
+                    </ul>
+
+                    <form action="/rent-confirm/{{ product.prod_id }}" method="POST">
+                    <input type="submit" class="btn btn-default btn-xlarge" value="Rent This">
+                    </form>
+                {% endif %}
+            {% else %}
+                <p>This item is currently {% if product.available %} available {% else %}not available{% endif %} for rent.</p>
+            {% endif %}
+        </div>
+    </div>
+    {% if product.owner.email != session['user'] and  have_searched %}
+        <div class="row row-centered">
+            <div class="col-xs-12 col-centered">
+                <h4>Go back to your <a href="/search-results?search_area={{ session['search_area'] }}&search_miles={{ session['search_radius'] }}&search_start_date={{ session['search_start_date'].date().isoformat() }}&search_end_date={{ session['search_end_date'].date().isoformat() }}&category_id={{ session['search_category_id'] }}&brand_id={{ session['search_brand_id'] }}">search results</a></h4>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+
+    <br>
+    <br>
+
+  <div class="container-fluid">
+    <footer>2015 | Frances Wong | <a href="mailto:fswong@gmail.com">Say hello</a></footer>
+  <div>
+
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+   <script src="/static/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+{% extends 'edit-base.html' %}
+
+{% block title %}Edit A Tent{% endblock %}
+
+{% block content %}
+
+<h3>Tent Specs</h3>
+
+    Best Use: 
+    <select name="bestuse">
+        {% for best_use in best_uses %}
+            {% if child.use_id == best_use.use_id %}
+                <option value="{{ best_use.use_id }}" selected>{{ best_use.use_name }}</option>
+            {% else %}
+                <option value="{{ best_use.use_id }}">{{ best_use.use_name }}</option>
+            {% endif %}
+        {% endfor %}
+    </select><br>
+      <br>
+
+    Season Category: 
+    <select name="seasoncat">
+        {% for season in seasons %}
+            {% if child.seasons == season %}
+                <option value="{{ season }}" selected>{{ seasons[season] }}</option>
+            {% else %}
+                <option value="{{ season }}">{{ seasons[season] }}</option>
+            {% endif %}
+        {% endfor %}
+    </select><br>
+    <br>
+
+    Sleep Capacity: <input type="text" size="2" maxlength="2" value = "{{ child.sleep_capacity }}" name="sleep"><br>
+    <br>
+    
+    Minimum trail weight (in ounces): <input type="text" size="4" maxlength="3" value ="{{ child.min_trail_weight }}" name="weight"><br>
+    <br>
+    
+    Floor width (in inches): <input type="text" size="4" maxlength="3" {% if child.floor_width %} value = "{{ child.floor_width }}"{% endif %} name="width"><br>
+    <br>
+    
+    Floor length (in inches): <input type="text" size="4" maxlength="3" {% if child.floor_length %} value = "{{ child.floor_length }}"{% endif %} name="length"><br>
+    <br>
+    
+    Number of doors: <input type="text" size="3" maxlength="1" {% if child.num_doors %} value = "{{ child.num_doors }}"{% endif %} name="doors"><br>
+    <br>
+    
+    Number of poles: <input type="text" size="3" maxlength="2" {% if child.num_poles %} value = "{{ child.num_poles }}"{% endif %} name="poles" ><br>
+    <br>
+{% endblock %} 

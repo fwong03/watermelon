@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Rental Confirmation{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <h1> Rental confirmation</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-5">
+            <img src="{{ "../" + product.image_url }}" alt="{{ product.brand.brand_name }} {{ product.model }}" style="height:170px">
+        </div>
+        <div class="col-xs-7">
+
+            
+            <h4>You are committing to pay for the following rental:</h4>
+            <ul>
+                <li><b>Product:</b> {{ product.brand.brand_name }} {{ product.model }}</li>
+                <li> <b>Category:</b> {{ product.category.cat_name }} </li> 
+                <li><b>Owner location:</b> {{ product.owner.city }}, {{ product.owner.region.full }}</li>
+                <li><b>Rental start date:</b> {{ start_date_string }}</li>
+                <li><b>Rental end date:</b> {{ end_date_string }}</li>
+                <li><b>Price per day:</b> ${{ '{:,.2f}'.format(product.price_per_day) }}</li>
+            </ul>
+            <h4>Your Rental:</h4>
+            <ul>
+                <li><b>Number of days:</b> {{ session['num_days'] }}
+                <li><b>Total Cost:</b> ${{ '{:,.2f}'.format(session['num_days'] * product.price_per_day) }}</li>
+            </ul>
+            <br>
+
+            <h4>You are about to rent this item for {{ session['num_days'] }} days for a total cost of ${{ '{:,.2f}'.format(session['num_days'] * product.price_per_day) }}.</h4>
+            <h4>Are you sure this is what you want to do?</h4>
+            <br>
+            <form action="/handle-rental/{{ product.prod_id }}" method="POST">
+                <input type="submit" class="btn btn-default btn-xlarge" value="Fo shizzle."><br><br>
+
+         <p>Nope. Go back to my <a href="/search-results?search_area={{ session['search_area'] }}&search_miles={{ session['search_radius'] }}&search_start_date={{ session['search_start_date'].date().isoformat() }}&search_end_date={{ session['search_end_date'].date().isoformat() }}&category_id={{ session['search_category_id'] }}&brand_id={{ session['search_brand_id'] }}">search results</a></p>
+     </div>
+    </div>
+</div>
+
+
+{% endblock %}

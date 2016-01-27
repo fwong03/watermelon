@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% block title %}TITLE GOES HERE{% endblock %}</title>
+
+    <link href="/static/bootstrap-3.3.6-dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="/static/project.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <h1><a class="navbar-brand" href="/success">happy camper</a></h1>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/account-info">Your Account</a></li>
+                    <li><a href="/logout">Log Out</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+  
+  <hr>
+    <ul>
+      {% for message in get_flashed_messages() %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+
+
+
+
+
+  {% block content %} put your content here {% endblock %}
+    <br>
+    <br>
+  <div class="container-fluid">
+    <footer>2015 | Frances Wong | <a href="mailto:fswong@gmail.com">Say hello</a></footer>
+  <div>
+
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+   <script src="/static/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>

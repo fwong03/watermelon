@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Product Ratings{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            <h3>Ratings for Product: {{ product.brand.brand_name }} {{ product.model }}</h3>
+            <p><a href="/product-detail/{{ product.prod_id }}">Go back to product listing</a></p>
+             <br>
+             <img class="thumbnail" src="{{ "../" + product.image_url }}" alt="profile pic" style="height:128px">
+            <h4>Average Star Rating: 
+                {% if average > 0 %}
+                    {{ '{:,.1f}'.format(average) }} Stars
+                {% else %}
+                    This product has no star ratings yet.
+                {% endif %}
+            </h4>
+            <br>
+            <h4>Comments</h4>
+        </div>
+    </div>
+<div class="row">
+        <div class="col-xs-12 col-md-6 col-lg-4">
+        {% if ratings %}
+           <table class="table account-info-table">
+            <tr>
+                <th>Stars (out of 4)</th>
+                <th>Comments</th>
+            </tr>
+        {% for rating in ratings %}
+        <tr>
+            <td>{{ rating.stars }}</td>
+            <td>{{ rating.comments }}</td>
+        {% endfor %}
+    </table>
+    {% else %}
+        <ul>
+            <li>This product has no comments yet.</li>
+        </ul>
+    {% endif %}
+    </div>
+</div>
+</div>
+
+
+{% endblock %}

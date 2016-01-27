@@ -1,0 +1,51 @@
+{% extends 'list-base.html' %}
+
+{% block title %}List A Tent{% endblock %}
+
+{% block content %}
+
+<h3>Tent Specs</h3>
+
+    Best Use: 
+    <select name="bestuse">
+        {% for best_use in best_uses %}
+            <option value="{{ best_use.use_id }}">{{ best_use.use_name }}</option>
+        {% endfor %}
+    </select><br>
+      <br>
+
+    Season Category: 
+    <select name="seasoncat">
+        {% for season in seasons %}
+            {% if season == 3 %}
+                <option value="{{ season }}" selected>{{ seasons[season] }}</option>
+            {% else %}
+                <option value="{{ season }}">{{ seasons[season] }}</option>
+            {% endif %}
+        {% endfor %}
+    </select><br>
+    <br>
+
+    Sleep Capacity: <input type="text" size="2" maxlength="2" name="sleep"><br>
+    <br>
+    
+    Minimum trail weight (ounces): <input type="text" size="6" maxlength="3"
+                                placeholder = "16 oz = 1 lb" name="weight"><br>
+    <br>
+    
+    Floor width (inches): <input type="text" size="4" maxlength="3"
+                                placeholder="optional" name="width"><br>
+    <br>
+    
+    Floor length (inches): <input type="text" size="4" maxlength="3"
+                                placeholder="optional" name="length"><br>
+    <br>
+    
+    Number of doors: <input type="text" size="3" maxlength="1"
+                                placeholder="optional" name="doors"><br>
+    <br>
+    
+    Number of poles: <input type="text" size="3" maxlength="2"
+                                placeholder="optional" name="poles" ><br>
+    <br>
+{% endblock %} 

@@ -1,0 +1,14 @@
+{% extends 'product-detail-base.html' %}
+
+{% block content %}
+
+            <ul>
+                <li>Fill Type: {{ item.filltype.fill_name }}</li>
+                <li>Temp Rating (fahrenheit): {{ item.temp_rating }}</li>
+                <li>Weight (ounces): {{ item.weight }}</li>
+                <li>Length (inches): {{ item.length }} </li>
+                {% if item.gender %}<li>Gender: {{ item.gender.gender_name }} </li>{% endif %}
+            </ul>
+
+
+{% endblock %}

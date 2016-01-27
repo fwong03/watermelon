@@ -1,0 +1,113 @@
+body {
+  background-image: url("/static/img/gray_jean.png");
+  background-repeat: repeat;
+  color: #262626;
+}
+
+input {
+/*  text-align: center;*/
+  color: #262626;
+/*  font-size: 80%;*/
+}
+
+select {
+  color: #262626;
+/*  font-size: 80%;*/
+}
+
+.row .row-centered {
+  text-align:center;
+}
+
+.col-centered {
+  display:inline-block;
+  float:none;
+  /* reset the text-align */
+  text-align:center;
+  /* inline-block space fix */
+  margin-right:-4px;
+}
+
+.modal-body{
+  background-image: url("/static/img/gray_jean.png");
+  background-repeat: repeat;
+}
+
+.modal-header{
+  background-image: url("/static/img/cream_pixels.png");
+  background-repeat: repeat;
+}
+
+.modal-footer{
+  background-image: url("/static/img/gray_jean.png");
+  background-repeat: repeat;
+}
+
+.account-info-table {
+  background-image: url("/static/img/crossword.png");
+  background-repeat: repeat;
+  font-size: 90%;
+
+}
+
+.search-form-table {
+  background-image: url("/static/img/crossword.png");
+  background-repeat: repeat;
+
+}
+
+.navbar-default {
+    background-image: url("/static/img/cream_pixels.png");
+    background-repeat: repeat;
+}
+
+.navbar-default .navbar-brand {
+    font-size: 100%;
+}
+
+.landing-page-choice {
+    font-size: 25px;
+}
+
+.dropdown-menu {
+  left: 50%;
+  right: auto;
+  text-align: center;
+  transform: translate(-50%, 0);
+}
+
+.btn{
+  background-color: #909899;
+  color: white;
+}
+
+.btn-xlarge {
+    padding: 18px 28px;
+    font-size: 22px; 
+    line-height: normal;
+    -webkit-border-radius: 8px;
+       -moz-border-radius: 8px;
+            border-radius: 8px;
+}
+
+.thumb {
+  border-radius: 25px;
+  margin: 5px;
+  padding: 5px;
+  border: 2px solid #909899;
+  background-image: url("/static/img/gray_jean.png");
+  background-repeat: repeat;
+
+}
+
+.thumbnail {
+    border-radius:15px;
+    overflow:hidden;
+}
+
+#search-form {
+  font-size: 115%
+  }
+
+
+ 

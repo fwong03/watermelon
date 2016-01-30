@@ -1,0 +1,6 @@
+*.pyc
+secret.*
+Lib/
+Scripts/
+Include/
+pip-selfcheck.json

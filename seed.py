@@ -1,17 +1,28 @@
 from model import Region, User, BestUse, Category, Brand, Product, Tent
 from model import FillType, Gender, SleepingBag, PadType, SleepingPad
-from model import History, Rating
+from model import History, Rating, PostalCode
 from model import connect_to_db, db
 from server import app
 from datetime import datetime
 import os
+
+def clear_data():
+    meta = db.metadata
+    for table in reversed(meta.sorted_tables):
+        if table.name == 'postalcodes':
+            continue
+        print '\n**Dropping table %s**\n' % table
+        # db.session.execute(table.delete())
+        # db.engine.execute('TRUNCATE TABLE ' + table.name + ' RESTART IDENTITY CASCADE;')
+        db.engine.execute('DROP TABLE ' + table.name + ' CASCADE')
+        db.session.commit()
 
 
 def load_regions():
     """Load regions, i.e. states, for user addresses"""
 
     print "Regions"
-    Region.query.delete()
+    # Region.query.delete()
 
     for row in open("data/regionsdata"):
         row = row.strip()
@@ -28,7 +39,7 @@ def load_users():
     """Load user data"""
 
     print "Users"
-    User.query.delete()
+    # User.query.delete()
 
     for row in open("data/customerdata"):
         row = row.strip()
@@ -59,7 +70,7 @@ def load_bestuses():
     """Load best use categories"""
 
     print "BestUses"
-    BestUse.query.delete()
+    # BestUse.query.delete()
 
     for row in open("data/bestusesdata"):
         use = row.strip()
@@ -75,7 +86,7 @@ def load_categories():
     """Load product categories"""
 
     print "Categories"
-    Category.query.delete()
+    # Category.query.delete()
 
     for row in open("data/categoriesdata"):
         name = row.strip()
@@ -91,7 +102,7 @@ def load_brands():
     """Load brand names"""
 
     print "Brands"
-    Brand.query.delete()
+    # Brand.query.delete()
 
     for row in open("data/brandsdata"):
         name = row.strip()
@@ -107,7 +118,7 @@ def load_products():
     """Load products data"""
 
     print "Products"
-    Product.query.delete()
+    # Product.query.delete()
 
     for row in open("data/productsdata"):
         row = row.strip()
@@ -144,7 +155,7 @@ def load_tents():
     """Load tents data"""
 
     print "Tents"
-    Tent.query.delete()
+    # Tent.query.delete()
 
     for row in open("data/tentsdata"):
         row = row.strip()
@@ -173,7 +184,7 @@ def load_filltypes():
     """Load sleeping bag fill types"""
 
     print "Fill Types"
-    FillType.query.delete()
+    # FillType.query.delete()
 
     for row in open("data/filltypesdata"):
         row = row.strip()
@@ -190,7 +201,7 @@ def load_gendertypes():
     """Load gender types"""
 
     print "Gender Types"
-    Gender.query.delete()
+    # Gender.query.delete()
 
     for row in open("data/gendersdata"):
         row = row.strip()
@@ -207,7 +218,7 @@ def load_sleepingbags():
     """Load sleeping bags data"""
 
     print "Sleeping Bags"
-    SleepingBag.query.delete()
+    # SleepingBag.query.delete()
 
     for row in open("data/sleepingbagsdata"):
         row = row.strip()
@@ -232,7 +243,7 @@ def load_padtypes():
     """Load pad types"""
 
     print "Pad Types"
-    PadType.query.delete()
+    # PadType.query.delete()
 
     for row in open("data/padtypesdata"):
         row = row.strip()
@@ -249,7 +260,7 @@ def load_sleepingpads():
     """Load sleeping pads data"""
 
     print "Sleeping Pads"
-    SleepingPad.query.delete()
+    # SleepingPad.query.delete()
 
     for row in open("data/sleepingpadsdata"):
         row = row.strip()
@@ -275,7 +286,7 @@ def load_histories():
     """Load history data"""
 
     print "Histories"
-    History.query.delete()
+    # History.query.delete()
 
     for row in open("data/historiesdata"):
         row = row.strip()
@@ -321,7 +332,7 @@ def load_ratings():
     """Load ratings"""
 
     print "Ratings"
-    Rating.query.delete()
+    # Rating.query.delete()
 
     for row in open("data/ratingsdata"):
         row = row.strip()
@@ -336,10 +347,32 @@ def load_ratings():
 
     db.session.commit()
 
+def load_postalcodes():
+    """Load postalcode lat and longs so can do distance search (as the bird flies)
+        without GoogleMaps.
+    """
+
+    print "PostalCodes"
+    # PostalCodes.query.delete()
+
+    for row in open('data/cityzip'):
+        row.strip()
+        temp = row.split(',')
+        zipcode = int(temp[2])
+        lat = float(temp[3])
+        longide = float(temp[4])
+
+        a = PostalCode(postalcode=zipcode, latitude=lat, longitude=longide)
+
+        db.session.add(a)
+
+    db.session.commit()
+
 
 if __name__ == "__main__":
     connect_to_db(app)
 
+    clear_data()
     # In case tables haven't been created, create them
     db.create_all()
 
@@ -358,3 +391,4 @@ if __name__ == "__main__":
     load_sleepingpads()
     load_ratings()
     load_histories()
+    # load_postalcodes()

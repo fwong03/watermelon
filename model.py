@@ -317,10 +317,25 @@ class Rating(db.Model):
                                                                  self.comments)
 
 
-# class Distances(db.Model):
-#     """To store distances searched by users."""
+class PostalCode(db.Model):
+    """To store lats and longs of zip codes.
+        Source: http://www.opengeocode.org/download.php#cityzip
+        Make postalcode an integer to make search faster
+    """
 
-#     __tablename__ = 'distances'
+    __tablename__ = 'postalcodes'
+
+    postalcode_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    postalcode = db.Column(db.Integer, nullable=False)
+    latitude = db.Column(db.Float, nullable=False)
+    longitude = db.Column(db.Float, nullable=False)
+
+    def __repr__(self):
+        return "<Postalcode postalcode_id=%d, postalcode=%d, latitude=%f, longitude=%f>" % (
+                                                                                self.postalcode_id,
+                                                                                self.postalcode,
+                                                                                self.latitude,
+                                                                                self.longitude)
     
 
 ##############################################################################

@@ -355,12 +355,12 @@ def load_postalcodes():
     print "PostalCodes"
     # PostalCodes.query.delete()
 
-    for row in open('data/cityzip'):
+    for row in open('data/cityzip_nodupes'):
         row.strip()
-        temp = row.split(',')
-        zipcode = int(temp[2])
-        lat = float(temp[3])
-        longide = float(temp[4])
+        temp = row.split('|')
+        zipcode = int(temp[0])
+        lat = float(temp[1])
+        longide = float(temp[2])
 
         a = PostalCode(postalcode=zipcode, latitude=lat, longitude=longide)
 
@@ -391,4 +391,4 @@ if __name__ == "__main__":
     load_sleepingpads()
     load_ratings()
     load_histories()
-    # load_postalcodes()
+    load_postalcodes()

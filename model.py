@@ -325,18 +325,14 @@ class PostalCode(db.Model):
 
     __tablename__ = 'postalcodes'
 
-    postalcode_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    postalcode = db.Column(db.Integer, nullable=False)
+    postalcode = db.Column(db.Integer, primary_key=True)
     latitude = db.Column(db.Float, nullable=False)
     longitude = db.Column(db.Float, nullable=False)
 
     def __repr__(self):
-        return "<Postalcode postalcode_id=%d, postalcode=%d, latitude=%f, longitude=%f>" % (
-                                                                                self.postalcode_id,
-                                                                                self.postalcode,
-                                                                                self.latitude,
-                                                                                self.longitude)
-    
+        return "<postalcode=%d, latitude=%f, longitude=%f>" % (self.postalcode,
+                                                               self.latitude,
+                                                               self.longitude)
 
 ##############################################################################
 

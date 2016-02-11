@@ -48,6 +48,8 @@ def make_user(password):
                 phone=phonenumber, email=username, password=password,
                 profile_pic_url=profile_url)
 
+#########  TODO: Check to see if postalcode is in database. If not, add ######
+
     return user
 
 

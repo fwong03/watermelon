@@ -1,4 +1,4 @@
-from model import User, PostalCode
+from model import User, PostalCode, db
 from datetime import datetime, timedelta
 from geolocation.google_maps import GoogleMaps
 from geolocation.distance_matrix import const
@@ -11,26 +11,42 @@ import math
 
 
 def add_postalcode(search_center_string):
-    """Takes in zipcode as a string, gets lat and long info using the GoogleMaps
+    """ Takes in zipcode as a string, gets lat and long info using the GoogleMaps
         API, and adds the zipcode to the PostalCodes table.
-    """
-        google_maps = GoogleMaps(api_key=os.environ['GOOGLE_API_KEY'])
-        location = google_maps.search(location=search_center_string).first()
 
-        a = PostalCode(postalcode=int(search_center_string, latitude=location.lat,
-                       longitude=location.lng)
-        db.session.add(a)
-        db.session.commit()
+    """
+    google_maps = GoogleMaps(api_key=os.environ['GOOGLE_API_KEY'])
+    location = google_maps.search(location=search_center_string).first()
+
+    a = PostalCode(postalcode=int(search_center_string), latitude=location.lat,
+                   longitude=location.lng)
+
+    db.session.add(a)
+    db.session.commit()
 
 
 def calc_Haversine_distance(lat1, lng1, lat2, lng2):
-    """Uses the Haversine formual to calculate the distance between two
+    """ Uses the Haversine formual to calculate the distance in miles between two
         pairs of lat and longs.
+
     """
+    # radius_of_earth_miles = 3960
+    radius_of_earth_km = 6373
 
-        to_radians = math.pi / 180
+    convert_to_radians = math.pi / 180
 
-        d_lon = 
+    d_lat = convert_to_radians * (lat2 - lat1)
+    d_lon = convert_to_radians * (lng2 - lng1)
+    lat1_radians = convert_to_radians * lat1
+    lat2_radians = convert_to_radians * lat2
+
+    a = math.sin(d_lat / 2)**2 + (math.cos(lat1_radians) * math.cos(lat2_radians) * math.sin(d_lon / 2)**2)
+    c = 2 * math.asin(math.sqrt(a))
+
+    d = radius_of_earth_km * c
+
+    return d
+
 
 def search_radius(search_center_string, postalcodes, radius):
     """ Finds zipcodes in the database that are within a search radius of a
@@ -63,6 +79,10 @@ def search_radius(search_center_string, postalcodes, radius):
 
     for postalcode in postalcodes:
         postalcodes_in_db.append(postalcode[0])
+
+
+############3### TODO: use haversine formula here ########################3
+
 
     # distinct_postalcodes = postalcodes_in_db
     # postalcodes_within_radius = []

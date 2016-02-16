@@ -1,7 +1,8 @@
 from flask import request, session
 from model import User, Region, Brand, Product, Tent
-from model import SleepingBag, SleepingPad
+from model import SleepingBag, SleepingPad, PostalCode
 from model import db
+from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime
 
 """ Helper functions used in server.py to make and update products and users.
@@ -17,6 +18,22 @@ from datetime import datetime
 
 
 ######################## User stuff ###################################
+
+def make_postalcode(postalcode_string):
+    """ Takes in zipcode as a string, gets lat and long info using the GoogleMaps
+        API, and adds the zipcode to the PostalCodes table.
+
+    """
+    google_maps = GoogleMaps(api_key=os.environ['GOOGLE_API_KEY'])
+    location = google_maps.search(location=postalcode_string).first()
+
+    a = PostalCode(postalcode=int(postalcode_string), latitude=location.lat,
+                   longitude=location.lng)
+
+    db.session.add(a)
+    db.session.commit()
+
+
 def make_user(password):
     """ Creates User object when a user creates a new account.
 
@@ -38,7 +55,14 @@ def make_user(password):
 
     # Get region id from the Regions table
     region = Region.query.filter(Region.abbr == state).one()
-    state_id = region.region_id
+    state_id = region.
+
+############## TODO: MAKE TEST FOR ADDING ZIPCODE DURING MAKING USER #####
+
+    try:
+        PostalCode.query.get(int(zipcode))
+    except NoResultFound:
+        make_postalcode(zipcode)
 
     if not profile_url:
         profile_url = "static/img/defaultimg.jpg"
@@ -47,8 +71,6 @@ def make_user(password):
                 city=cty, region_id=state_id, postalcode=zipcode,
                 phone=phonenumber, email=username, password=password,
                 profile_pic_url=profile_url)
-
-#########  TODO: Check to see if postalcode is in database. If not, add ######
 
     return user
 

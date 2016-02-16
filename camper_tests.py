@@ -46,6 +46,7 @@ class IntegrationTestCase(TestCase):
         load_sleepingpads()
         load_ratings()
         load_histories()
+        load_test_postalcodes()
 
     def tearDown(self):
         clear_data()

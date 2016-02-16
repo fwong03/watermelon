@@ -9,8 +9,8 @@ import os
 def clear_data():
     meta = db.metadata
     for table in reversed(meta.sorted_tables):
-        if table.name == 'postalcodes':
-            continue
+        # if table.name == 'postalcodes':
+        #     continue
         print '\n**Dropping table %s**\n' % table
         # db.session.execute(table.delete())
         # db.engine.execute('TRUNCATE TABLE ' + table.name + ' RESTART IDENTITY CASCADE;')
@@ -347,6 +347,7 @@ def load_ratings():
 
     db.session.commit()
 
+
 def load_postalcodes():
     """Load postalcode lat and longs so can do distance search (as the bird flies)
         without GoogleMaps.
@@ -356,6 +357,28 @@ def load_postalcodes():
     # PostalCodes.query.delete()
 
     for row in open('data/cityzip_nodupes'):
+        row.strip()
+        temp = row.split('|')
+        zipcode = int(temp[0])
+        lat = float(temp[1])
+        longide = float(temp[2])
+
+        a = PostalCode(postalcode=zipcode, latitude=lat, longitude=longide)
+
+        db.session.add(a)
+
+    db.session.commit()
+
+
+def load_test_postalcodes():
+    """Load postalcode lat and longs so can do distance search (as the bird flies)
+        without GoogleMaps.
+    """
+
+    print "PostalCodes"
+    # PostalCodes.query.delete()
+
+    for row in open('data/cityzip_fortests'):
         row.strip()
         temp = row.split('|')
         zipcode = int(temp[0])
@@ -391,4 +414,4 @@ if __name__ == "__main__":
     load_sleepingpads()
     load_ratings()
     load_histories()
-    load_postalcodes()
+    load_test_postalcodes()

@@ -8,13 +8,15 @@ from model import connect_to_db, db
 from seed import load_regions, load_users, load_bestuses, load_categories
 from seed import load_brands, load_products, load_tents, load_filltypes
 from seed import load_gendertypes, load_sleepingbags, load_padtypes
-from seed import load_sleepingpads, load_ratings, load_histories
+from seed import load_sleepingpads, load_ratings, load_histories, load_test_postalcodes
 from seed import clear_data
 from model import User, Brand, Product, Tent, SleepingBag, Category, Rating, SleepingPad
 
 from make_update_helpers import check_brand, make_brand, get_brand_id
+from make_update_helpers import make_postalcode
 from search_helpers import get_users_in_area, filter_products, convert_string_to_datetime
-from search_helpers import get_products_within_dates, categorize_products
+from make_update_helpers import make_postalcode
+from search_helpers import get_products_within_dates, categorize_products, calc_Haversine_distance
 
 from make_update_helpers import calc_avg_star_rating
 from search_helpers import search_radius, calc_default_dates
@@ -27,8 +29,6 @@ class IntegrationTestCase(TestCase):
         postgrespassword = os.environ['POSTGRES_PASSWORD']
         db_uri = 'postgresql://' + postgrespassword + '/test'
         connect_to_db(app, db_uri)
-
-        clear_data()
 
         db.create_all()
 
@@ -49,6 +49,7 @@ class IntegrationTestCase(TestCase):
         load_test_postalcodes()
 
     def tearDown(self):
+        db.session.close_all()
         clear_data()
         # meta = db.metadata
         # for table in reversed(meta.sorted_tables):
@@ -274,7 +275,7 @@ class IntegrationTestCase(TestCase):
         make_brand("ABC")
         self.assertEqual(Brand.query.filter(Brand.brand_name == "ABC").one().brand_name, "ABC")
 
-        brand = Brand.query.filter(Brand.brand_name == "ABC").one() 
+        brand = Brand.query.filter(Brand.brand_name == "ABC").one()
 
     def test_get_brand_id(self):
         self.assertEqual(get_brand_id("REI"), 1)
@@ -297,7 +298,17 @@ class IntegrationTestCase(TestCase):
         self.assertEqual(inventory['Sleeping Bags'][0].prod_id, 5)
 
 
+
 class SearchHelpersTestCase(TestCase):
+
+    def test_Haversine_formula(self):
+        lat1 = 36.12
+        lng1 = -86.67
+        lat2 = 33.94
+        lng2 = -118.40
+
+        distance = calc_Haversine_distance(lat1, lng1, lat2, lng2)
+        self.assertEqual(int(distance), 1794)
 
     def test_googlemaps_api(self):
         searchcenter = '94612'
@@ -354,6 +365,11 @@ class SearchHelpersTestCase(TestCase):
 
 
 class MakeUpdateTestCase(TestCase):
+
+    def test_make_postalcode(self):
+        pass
+
+
     def test_create_user_object(self):
         user1 = User(fname='Michelle', lname='Tanner', street='1709 Broderick Street',
                      city='San Francisco', region_id=1, postalcode='94115',

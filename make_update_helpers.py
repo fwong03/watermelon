@@ -5,7 +5,8 @@ from model import db
 from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime
 
-""" Helper functions used in server.py to make and update products and users.
+"""
+    Helper functions used in server.py to make and update products and users.
     Fifteen functions total.
 
     Also threw in two non-making or updating functions at the end:
@@ -20,7 +21,8 @@ from datetime import datetime
 ######################## User stuff ###################################
 
 def make_postalcode(postalcode_string):
-    """ Takes in zipcode as a string, gets lat and long info using the GoogleMaps
+    """
+        Takes in zipcode as a string, gets lat and long info using the GoogleMaps
         API, and adds the zipcode to the PostalCodes table.
 
     """
@@ -55,7 +57,7 @@ def make_user(password):
 
     # Get region id from the Regions table
     region = Region.query.filter(Region.abbr == state).one()
-    state_id = region.
+    state_id = region.region_id
 
 ############## TODO: MAKE TEST FOR ADDING ZIPCODE DURING MAKING USER #####
 

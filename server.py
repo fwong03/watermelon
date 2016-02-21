@@ -419,6 +419,12 @@ def show_results():
         flash("Search dates must be formatted YYYY-mm-dd. Please try again.")
         return redirect('/success')
 
+    try:
+        temp = int(request.args.get("search_area"))
+    except ValueError:
+        flash("Search center must be a postal code. Please try again.")
+        return redirect('/success')
+
     search_area = request.args.get("search_area")
     category_id = int(request.args.get("category_id"))
     brand_id = int(request.args.get("brand_id"))

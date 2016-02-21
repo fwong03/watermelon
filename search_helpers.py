@@ -7,13 +7,15 @@ from sqlalchemy.orm.exc import NoResultFound
 import os
 import math
 
-""" Helper functions for server.py search-related routes.
-     Seven function total.
+"""
+    Helper functions for server.py search-related routes.
+
 """
 
 
 def calc_Haversine_distance(lat1, lng1, lat2, lng2):
-    """ Uses the Haversine formual to calculate the distance in miles between two
+    """
+        Uses the Haversine formual to calculate the distance in miles between two
         pairs of lat and longs.
 
     """
@@ -38,7 +40,8 @@ def calc_Haversine_distance(lat1, lng1, lat2, lng2):
 
 
 def search_radius(search_center_string, postalcodes, radius):
-    """ Finds zipcodes in the database that are within a search radius of a
+    """
+        Finds zipcodes in the database that are within a search radius of a
         location.
 
         This uses the python library geolocation-python, which uses the

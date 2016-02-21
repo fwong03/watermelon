@@ -226,7 +226,7 @@ class IntegrationTestCase(TestCase):
 
         self.assertEqual(result.status_code, 200)
         self.assertIn('<li>This product has been delisted.</li>', result.data)
-        self.assertEqual(Product.query.get(1).available, 0)
+        self.assertEqual(Product.query.get(1).available, False)
 
     def test_deactivate_account(self):
         with self.client as c:
@@ -241,7 +241,7 @@ class IntegrationTestCase(TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertIn('Your account has been deactivated. Thank you for using Happy Camper!',
                       result.data)
-        self.assertEqual(User.query.get(5).active, 0)
+        self.assertEqual(User.query.get(5).active, False    )
 
     def test_find_users(self):
         franken = User.query.filter(User.fname == 'Franken').one()
@@ -298,7 +298,6 @@ class IntegrationTestCase(TestCase):
         self.assertEqual(inventory['Sleeping Bags'][0].prod_id, 5)
 
 
-
 class SearchHelpersTestCase(TestCase):
 
     def test_Haversine_formula(self):
@@ -310,34 +309,34 @@ class SearchHelpersTestCase(TestCase):
         distance = calc_Haversine_distance(lat1, lng1, lat2, lng2)
         self.assertEqual(int(distance), 1794)
 
-    def test_googlemaps_api(self):
-        searchcenter = '94612'
-        postalcodes = [('94608',), ('94102',), ('94040',), ('95376',), ('95451',),
-                       ('92277',), ('10013',), ('02139',)]
+    # def test_googlemaps_api(self):
+    #     searchcenter = '94612'
+    #     postalcodes = [('94608',), ('94102',), ('94040',), ('95376',), ('95451',),
+    #                    ('92277',), ('10013',), ('02139',)]
 
-        within20 = search_radius(searchcenter, postalcodes, 20)
-        within60 = search_radius(searchcenter, postalcodes, 60)
-        within200 = search_radius(searchcenter, postalcodes, 200)
+    #     within20 = search_radius(searchcenter, postalcodes, 20)
+    #     within60 = search_radius(searchcenter, postalcodes, 60)
+    #     within200 = search_radius(searchcenter, postalcodes, 200)
 
-        self.assertEqual(sorted(within20), sorted(['94608', '94102']))
-        self.assertEqual(sorted(within60), sorted(['94608', '94102', '94040',
-                                                   '95376']))
-        self.assertEqual(sorted(within200), sorted(['94608', '94102', '94040',
-                                                    '95376', '95451']))
+    #     self.assertEqual(sorted(within20), sorted(['94608', '94102']))
+    #     self.assertEqual(sorted(within60), sorted(['94608', '94102', '94040',
+    #                                                '95376']))
+    #     self.assertEqual(sorted(within200), sorted(['94608', '94102', '94040',
+    #                                                 '95376', '95451']))
 
-    def test_search_radius(self):
-        searchcenter1 = '94612'
-        searchcenter2 = '94109'
-        searchcenter3 = '94040'
-        searchcenter4 = '10013'
-        postalcodes = [('94612',), ('94109',), ('94040',), ('95376',), ('10013',)]
+    # def test_search_radius(self):
+    #     searchcenter1 = '94612'
+    #     searchcenter2 = '94109'
+    #     searchcenter3 = '94040'
+    #     searchcenter4 = '10013'
+    #     postalcodes = [('94612',), ('94109',), ('94040',), ('95376',), ('10013',)]
 
-        self.assertEqual(sorted(search_radius(searchcenter1, postalcodes, 20)), sorted(['94109', '94612']))
-        self.assertEqual(sorted(search_radius(searchcenter1, postalcodes, 60)), sorted(['94109', '94612', '94040', '95376']))
-        self.assertEqual(sorted(search_radius(searchcenter2, postalcodes, 20)), sorted(['94109', '94612']))
-        self.assertEqual(sorted(search_radius(searchcenter2, postalcodes, 60)), sorted(['94109', '94612', '94040']))
-        self.assertEqual(sorted(search_radius(searchcenter3, postalcodes, 20)), ['94040'])
-        self.assertEqual(sorted(search_radius(searchcenter4, postalcodes, 20)), ['10013'])
+    #     self.assertEqual(sorted(search_radius(searchcenter1, postalcodes, 20)), sorted(['94109', '94612']))
+    #     self.assertEqual(sorted(search_radius(searchcenter1, postalcodes, 60)), sorted(['94109', '94612', '94040', '95376']))
+    #     self.assertEqual(sorted(search_radius(searchcenter2, postalcodes, 20)), sorted(['94109', '94612']))
+    #     self.assertEqual(sorted(search_radius(searchcenter2, postalcodes, 60)), sorted(['94109', '94612', '94040']))
+    #     self.assertEqual(sorted(search_radius(searchcenter3, postalcodes, 20)), ['94040'])
+    #     self.assertEqual(sorted(search_radius(searchcenter4, postalcodes, 20)), ['10013'])
 
     # http://www.robotswillkillusall.org/posts/how-to-mock-datetime-in-python/
     # https://pypi.python.org/pypi/mock

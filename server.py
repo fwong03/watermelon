@@ -210,9 +210,9 @@ def deactivate_account():
     products = user.products
 
     for product in products:
-        product.available = 0
+        product.available = False
 
-    user.active = 0
+    user.active = False
     db.session.commit()
     session.clear()
 
@@ -759,7 +759,7 @@ def delist_product():
 
     prod_id = int(request.form.get("prod_id"))
     product = Product.query.get(prod_id)
-    product.available = 0
+    product.available = False
     db.session.commit()
 
     flash("This product has been delisted.")

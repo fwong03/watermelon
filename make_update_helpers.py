@@ -4,6 +4,8 @@ from model import SleepingBag, SleepingPad, PostalCode
 from model import db
 from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime
+from geolocation.google_maps import GoogleMaps
+import os
 
 """
     Helper functions used in server.py to make and update products and users.

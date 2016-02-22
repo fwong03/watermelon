@@ -318,7 +318,8 @@ class Rating(db.Model):
 
 
 class PostalCode(db.Model):
-    """To store lats and longs of zip codes.
+    """
+        To store lats and longs of zip codes.
         Source: http://www.opengeocode.org/download.php#cityzip
         Make postalcode an integer to make search faster
     """

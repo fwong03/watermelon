@@ -383,9 +383,9 @@ def load_test_postalcodes():
         temp = row.split('|')
         zipcode = int(temp[0])
         lat = float(temp[1])
-        longide = float(temp[2])
+        lng = float(temp[2])
 
-        a = PostalCode(postalcode=zipcode, latitude=lat, longitude=longide)
+        a = PostalCode(postalcode=zipcode, latitude=lat, longitude=lng)
 
         db.session.add(a)
 

@@ -1,7 +1,6 @@
 from flask import request, session
 from model import User, Region, Brand, Product, Tent
-from model import SleepingBag, SleepingPad, PostalCode
-from model import db
+from model import SleepingBag, SleepingPad, PostalCode, db
 from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime
 from geolocation.google_maps import GoogleMaps
@@ -31,11 +30,16 @@ def make_postalcode(postalcode_string):
     google_maps = GoogleMaps(api_key=os.environ['GOOGLE_API_KEY'])
     location = google_maps.search(location=postalcode_string).first()
 
+    print "\n\n\n\n Google Maps API: location is %r \n\n" % location
+
     a = PostalCode(postalcode=int(postalcode_string), latitude=location.lat,
                    longitude=location.lng)
 
     db.session.add(a)
     db.session.commit()
+
+    temp = PostalCode.query.get(int(postalcode_string))
+    print "****************\n\n\n\n\n MADE POSTALCODE %r\n\n\n\n\n*************" % temp
 
 
 def make_user(password):
@@ -105,7 +109,6 @@ def make_brand(brandname):
     """ Adds a new brand to the database. This is called by the check_brand
         function above if a new brand needs to be added to the database.
     """
-
     brand = Brand(brand_name=brandname)
 
     db.session.add(brand)

@@ -20,7 +20,6 @@ def calc_Haversine_distance(lat1, lng1, lat2, lng2):
 
     """
 
-############# TODO: MAKE TEST CHECKING DISTANCES ##############################
     radius_of_earth_miles = 3960
     # radius_of_earth_km = 6373
 
@@ -55,16 +54,19 @@ def search_radius(search_center_string, postalcodes, radius):
     """
 
     search_center_int = int(search_center_string)
+    print "\n\n\n\n**********SEARCH CENTER INT IS: %d*************\n\n\n\n" % search_center_int
 
     # Check if zipcode is in database. If not, get lat and long from
     # GoogleMaps and add it to the database.
 
-############# TODO: MAKE TEST WHEN ZIPCODE IN DB AND ZIPCODE NOT IN DB #####
+############# TODO: WHY IS THIS NOT MAKING A NEW POSTALCODE OBJECT????? #####
     try:
         search_center_obj = PostalCode.query.get(search_center_int)
     except NoResultFound:
         make_postalcode(search_center_string)
         search_center_obj = PostalCode.query.get(search_center_int)
+
+    print "************Search center object: \n\n\n\n %r \n\n\n\n**************" % search_center_obj
 
 
     # SQLite returns the distinct postal codes as a list of tuples. Convert this

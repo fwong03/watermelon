@@ -22,6 +22,7 @@ from search_helpers import search_radius, calc_default_dates
 
 class IntegrationTestCase(TestCase):
     def setUp(self):
+        print "\n\n\n\n (1) DOING AN INTEGRATION TEST \n\n\n\n"
         self.client = app.test_client()
         app.config['TESTING'] = True
         postgrespassword = os.environ['POSTGRES_PASSWORD']
@@ -297,6 +298,7 @@ class IntegrationTestCase(TestCase):
 
 class SearchHelpersTestCase(TestCase):
     def setUp(self):
+        print "\n\n\n\n (2) DOING A SEARCH TEST \n\n\n\n"
         self.client = app.test_client()
         app.config['TESTING'] = True
         postgrespassword = os.environ['POSTGRES_PASSWORD']
@@ -351,7 +353,7 @@ class SearchHelpersTestCase(TestCase):
 
     def test_search_radius(self):
         print "*************\n\n\n\n TESTING SEARCH RADIUS \n\n\n\n****************"
-        searchcenter = '99508'
+        searchcenter = '94607'
         postalcodes = [('94608',), ('94102',), ('94040',), ('95376',), ('95451',),
                        ('92277',), ('10013',), ('02139',)]
 
@@ -406,6 +408,7 @@ class SearchHelpersTestCase(TestCase):
 
 class MakeUpdateTestCase(TestCase):
     def setUp(self):
+        print "\n\n\n\n DOING A MAKE UPDATE TEST \n\n\n\n"
         self.client = app.test_client()
         app.config['TESTING'] = True
         postgrespassword = os.environ['POSTGRES_PASSWORD']

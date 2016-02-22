@@ -60,9 +60,10 @@ def search_radius(search_center_string, postalcodes, radius):
     # GoogleMaps and add it to the database.
 
 ############# TODO: WHY IS THIS NOT MAKING A NEW POSTALCODE OBJECT????? #####
-    try:
-        search_center_obj = PostalCode.query.get(search_center_int)
-    except NoResultFound:
+
+    search_center_obj = PostalCode.query.get(search_center_int)
+
+    if not search_center_obj:
         make_postalcode(search_center_string)
         search_center_obj = PostalCode.query.get(search_center_int)
 

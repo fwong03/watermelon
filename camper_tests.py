@@ -14,7 +14,6 @@ from model import SleepingPad, PostalCode
 from make_update_helpers import check_brand, make_brand, get_brand_id
 from make_update_helpers import make_postalcode
 from search_helpers import get_users_in_area, filter_products, convert_string_to_datetime
-from make_update_helpers import make_postalcode
 from search_helpers import get_products_within_dates, categorize_products, calc_Haversine_distance
 from make_update_helpers import calc_avg_star_rating
 from search_helpers import search_radius, calc_default_dates
@@ -81,22 +80,42 @@ class IntegrationTestCase(TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertIn('Create one here', result.data)
 
-    # def test_logout(self):
-    #     result = self.client.post('/logout', follow_redirects=True)
+    def test_logout(self):
+        result = self.client.get('/logout', follow_redirects=True)
 
-    #     self.assertEqual(result.status_code, 200)
-    #     self.assertIn('<p><b>Login Here</b></p>', result.data)
+        self.assertEqual(result.status_code, 200)
+        self.assertIn('Don\'t have an account yet?', result.data)
+
+    def test_create_new_user(self):
+        user1 = User(fname='Michelle', lname='Tanner', street='1709 Broderick Street',
+                     city='San Francisco', region_id=1, postalcode='94115',
+                     phone=4155556666, email='michelle@tanner.com', password='123')
+
+        user2 = User(fname='Grumpy', lname='Grandpa', street='54 Elizabeth Street #31',
+                     city='New York', region_id=2, postalcode='10013',
+                     phone=2125556666, email='grumpy@grandpa.com', password='123')
+
+        self.assertEqual(user1.email, 'michelle@tanner.com')
+        self.assertEqual(user2.email, 'grumpy@grandpa.com')
+        self.assertEqual(user1.region_id, 1)
+        self.assertEqual(user2.region_id, 2)
 
     def test_handle_successful_create_account(self):
         result = self.client.post('handle-create-account', data={'pword': '123',
                                   'confirm_pword': '123', 'firstname': 'The',
-                                  'lastname': 'Brain', 'staddress': '8 6th St',
-                                  'cty': 'San Francisco', 'state': 'CA',
-                                  'zipcode': '94103', 'phonenumber': '4155552222',
+                                  'lastname': 'Brain', 'staddress': '2525 Blueberry Rd #106',
+                                  'cty': 'Anchorage', 'state': 'AK',
+                                  'zipcode': '99503', 'phonenumber': '9075630220',
                                   'username': 'the@brain.com'}, follow_redirects=True)
 
         self.assertEqual(result.status_code, 200)
         self.assertIn('Find Stuff', result.data)
+
+        user = User.query.filter(User.email == 'the@brain.com').one()
+        self.assertEqual(user.street, '2525 Blueberry Rd #106')
+
+        postalcode = PostalCode.query.get(99503)
+        self.assertEqual(int(postalcode.longitude), -149)
 
     def test_handle_failed_create_account(self):
         result = self.client.post('handle-create-account', data={'pword': '123',
@@ -328,7 +347,6 @@ class SearchHelpersTestCase(TestCase):
         clear_data()
 
     def test_Haversine_formula(self):
-        print "****************\n\n\n\n TESTING HAVERSINE \n\n\n\n****************"
         lat1 = 36.12
         lng1 = -86.67
         lat2 = 33.94
@@ -338,13 +356,11 @@ class SearchHelpersTestCase(TestCase):
         self.assertEqual(int(distance), 1794)
 
     def test_get_postalcode(self):
-        print "*************\n\n\n\n TESTING GET POSTALCODE \n\n\n\n****************"
         zipcode = PostalCode.query.get(94109)
         self.assertEqual(zipcode.latitude, 37.803893)
         self.assertEqual(zipcode.longitude, -122.42364)
 
     def test_make_postalcode(self):
-        print "*************\n\n\n\n TESTING MAKE POSTALCODE \n\n\n\n****************"
         make_postalcode('98570')
         a = PostalCode.query.get(98570)
 
@@ -352,7 +368,6 @@ class SearchHelpersTestCase(TestCase):
         self.assertEqual(int(a.longitude), -122)
 
     def test_search_radius(self):
-        print "*************\n\n\n\n TESTING SEARCH RADIUS \n\n\n\n****************"
         searchcenter = '94607'
         postalcodes = [('94608',), ('94102',), ('94040',), ('95376',), ('95451',),
                        ('92277',), ('10013',), ('02139',)]
@@ -366,20 +381,6 @@ class SearchHelpersTestCase(TestCase):
                                                    '95376']))
         self.assertEqual(sorted(within200), sorted(['94608', '94102', '94040',
                                                     '95376', '95451']))
-
-    # def test_search_radius(self):
-    #     searchcenter1 = '94612'
-    #     searchcenter2 = '94109'
-    #     searchcenter3 = '94040'
-    #     searchcenter4 = '10013'
-    #     postalcodes = [('94612',), ('94109',), ('94040',), ('95376',), ('10013',)]
-
-    #     self.assertEqual(sorted(search_radius(searchcenter1, postalcodes, 20)), sorted(['94109', '94612']))
-    #     self.assertEqual(sorted(search_radius(searchcenter1, postalcodes, 60)), sorted(['94109', '94612', '94040', '95376']))
-    #     self.assertEqual(sorted(search_radius(searchcenter2, postalcodes, 20)), sorted(['94109', '94612']))
-    #     self.assertEqual(sorted(search_radius(searchcenter2, postalcodes, 60)), sorted(['94109', '94612', '94040']))
-    #     self.assertEqual(sorted(search_radius(searchcenter3, postalcodes, 20)), ['94040'])
-    #     self.assertEqual(sorted(search_radius(searchcenter4, postalcodes, 20)), ['10013'])
 
     # http://www.robotswillkillusall.org/posts/how-to-mock-datetime-in-python/
     # https://pypi.python.org/pypi/mock
@@ -404,55 +405,6 @@ class SearchHelpersTestCase(TestCase):
         ratings = [rating1, rating2, rating3]
 
         self.assertEqual(calc_avg_star_rating(ratings), 3)
-
-
-class MakeUpdateTestCase(TestCase):
-    def setUp(self):
-        print "\n\n\n\n DOING A MAKE UPDATE TEST \n\n\n\n"
-        self.client = app.test_client()
-        app.config['TESTING'] = True
-        postgrespassword = os.environ['POSTGRES_PASSWORD']
-        db_uri = 'postgresql://' + postgrespassword + '/test'
-        connect_to_db(app, db_uri)
-
-        db.create_all()
-
-        load_regions()
-        load_users()
-        load_bestuses()
-        load_categories()
-        load_brands()
-        load_products()
-        load_tents()
-        load_filltypes()
-        load_gendertypes()
-        load_sleepingbags()
-        load_padtypes()
-        load_sleepingpads()
-        load_ratings()
-        load_histories()
-        load_test_postalcodes()
-
-    def tearDown(self):
-        db.session.close_all()
-        clear_data()
-
-    def test_create_user_object(self):
-        print "**********************************************************************"
-        print "*****************\n\n\n\n\n LAST TEST \n\n\n\n\n\n*****************"
-        print "**********************************************************************"
-        user1 = User(fname='Michelle', lname='Tanner', street='1709 Broderick Street',
-                     city='San Francisco', region_id=1, postalcode='94115',
-                     phone=4155556666, email='michelle@tanner.com', password='123')
-
-        user2 = User(fname='Grumpy', lname='Grandpa', street='54 Elizabeth Street #31',
-                     city='New York', region_id=2, postalcode='10013',
-                     phone=2125556666, email='grumpy@grandpa.com', password='123')
-
-        self.assertEqual(user1.email, 'michelle@tanner.com')
-        self.assertEqual(user2.email, 'grumpy@grandpa.com')
-        self.assertEqual(user1.region_id, 1)
-        self.assertEqual(user2.region_id, 2)
 
 
 if __name__ == "__main__":

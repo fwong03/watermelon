@@ -66,10 +66,12 @@ def make_user(password):
     state_id = region.region_id
 
 ############## TODO: MAKE TEST FOR ADDING ZIPCODE DURING MAKING USER #####
+    print "\n\n\n\n\n\n************* CHECKING IF POSTALCODE IN DB *****************\n\n\n\n"
 
-    try:
-        PostalCode.query.get(int(zipcode))
-    except NoResultFound:
+    zipcode_check = PostalCode.query.get(int(zipcode))
+
+    if not zipcode_check:
+        print "\n\n CALLING make_postalcode \n\n\n"
         make_postalcode(zipcode)
 
     if not profile_url:

@@ -92,6 +92,8 @@ def handle_createaccount():
         db.session.add(user)
         db.session.commit()
 
+        print "\n\n\n\n*********MADE A NEW USER: %r**********\n\n\n" % user.email
+
         session['user'] = user.email
         flash("Successfully created account! Logged in as %s" % user.email)
 
